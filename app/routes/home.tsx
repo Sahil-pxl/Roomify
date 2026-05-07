@@ -13,14 +13,11 @@ export function meta({}: Route.MetaArgs) {
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
-
 export default function Home() {
       const navigate = useNavigate();
-
       const handleUploadComplete = async (base64Data: string) => {
         const newId = Date.now().toString();
         navigate(`/visualizer/${newId}`);
-
         return true;
       }
   return(
@@ -41,7 +38,7 @@ export default function Home() {
           <a href="#" className="cta"> Start Building
             <ArrowRight  className="icon"/>
           </a>
-          <Button variant="outline" size-lg>
+          <Button variant="outline" className="size-lg">
             Watch demo
           </Button>
         </div>
@@ -57,7 +54,6 @@ export default function Home() {
             </div>
             {/* <Upload /> */}
             <Upload onComplete={handleUploadComplete} />
-
           </div>
         </div>
       </section>
@@ -78,8 +74,7 @@ export default function Home() {
                     <div className="badge">
                       <span>Community</span>
                     </div>
-              </div>
-              
+              </div> 
               <div className="card-body">
                 <div>
                   <h3>Project Manhattan</h3>
@@ -91,15 +86,11 @@ export default function Home() {
                 </div>
                 <div className="arrow">
                   <ArrowUpRight  size={18}/>
-
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
-
       </section>
     </div>
     )

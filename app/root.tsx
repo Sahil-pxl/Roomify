@@ -17,7 +17,9 @@ import {
 } from "../lib/puter.action";
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { 
+    rel: "preconnect", 
+    href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
     href: "https://fonts.gstatic.com",
@@ -53,37 +55,29 @@ const DEFAULT_AUTH_STATE: AuthState = {
   userId: null,
 };
 
-
 export default function App() {
-
-      const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
-
+    const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
     const refreshAuth = async () => {
         try {
             const user = await getCurrentUser();
-
             setAuthState({
                 isSignedIn: !!user,
                 userName: user?.username || null,
                 userId: user?.uuid || null,
             });
-
             return !!user;
         } catch {
             setAuthState(DEFAULT_AUTH_STATE);
             return false;
         }
     }
-
     useEffect(() => {
         refreshAuth()
     }, []);
-
     const signIn = async () => {
         await puterSignIn();
         return await refreshAuth();
     }
-
     const signOut = async () => {
         puterSignOut();
         return await refreshAuth();
@@ -93,9 +87,6 @@ export default function App() {
         <Outlet 
         context={{...authState, refreshAuth,signIn,signOut}}/>;
     </main>
-  
-  
-
   )
 }
 
@@ -103,7 +94,6 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
-
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
@@ -114,7 +104,6 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     details = error.message;
     stack = error.stack;
   }
-
   return (
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>

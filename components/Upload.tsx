@@ -7,14 +7,12 @@ import {PROGRESS_INCREMENT, REDIRECT_DELAY_MS, PROGRESS_INTERVAL_MS} from "../li
 interface UploadProps {
     onComplete?: (base64Data: string) => void;
 }
-
 const Upload = ({ onComplete }: UploadProps) => {
     const [file, setFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [progress, setProgress] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
     const { isSignedIn } = useOutletContext<AuthContext>();
 
     useEffect(() => {
@@ -32,10 +30,8 @@ const Upload = ({ onComplete }: UploadProps) => {
 
     const processFile = useCallback((file: File) => {
         if (!isSignedIn) return;
-
         setFile(file);
         setProgress(0);
-
         const reader = new FileReader();
         reader.onerror = () => {
             setFile(null);
@@ -43,7 +39,6 @@ const Upload = ({ onComplete }: UploadProps) => {
         };
         reader.onloadend = () => {
             const base64Data = reader.result as string;
-
             intervalRef.current = setInterval(() => {
                 setProgress((prev) => {
                     const next = prev + PROGRESS_INCREMENT;
@@ -64,39 +59,30 @@ const Upload = ({ onComplete }: UploadProps) => {
         };
         reader.readAsDataURL(file);
     }, [isSignedIn, onComplete]);
-
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
         if (!isSignedIn) return;
         setIsDragging(true);
     };
-
-    const handleDragLeave = () => {
-        setIsDragging(false);
-    };
-
+    const handleDragLeave = () => {setIsDragging(false)};
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+    const isValidFileType =(file:File) => ALLOWED_TYPES.includes(file.type)
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragging(false);
-
         if (!isSignedIn) return;
-
         const droppedFile = e.dataTransfer.files[0];
-        const allowedTypes = ['image/jpeg', 'image/png'];
-        if (droppedFile && allowedTypes.includes(droppedFile.type)) {
+        if (droppedFile && isValidFileType(droppedFile)) {
             processFile(droppedFile);
         }
     };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!isSignedIn) return;
-
         const selectedFile = e.target.files?.[0];
-        if (selectedFile) {
+        if (selectedFile && isValidFileType(selectedFile)) {
             processFile(selectedFile);
         }
     };
-
     return (
         <div className="upload">
             {!file ? (
@@ -113,7 +99,6 @@ const Upload = ({ onComplete }: UploadProps) => {
                         disabled={!isSignedIn}
                         onChange={handleChange}
                     />
-
                     <div className="drop-content">
                         <div className="drop-icon">
                             <UploadIcon size={20} />
@@ -136,12 +121,9 @@ const Upload = ({ onComplete }: UploadProps) => {
                                 <ImageIcon className="image" />
                             )}
                         </div>
-
                         <h3>{file.name}</h3>
-
                         <div className='progress'>
                             <div className="bar" style={{ width: `${progress}%` }} />
-
                             <p className="status-text">
                                 {progress < 100 ? 'Analyzing Floor Plan...' : 'Redirecting...'}
                             </p>
