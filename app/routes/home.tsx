@@ -5,6 +5,9 @@ import Button from "../../components/ui/Button";
 import Upload from "../../components/Upload";
 import Upload1 from "../../components/Upload1";
 import { useNavigate, useOutletContext } from "react-router";
+import { useState, useRef } from "react";
+// import  type { timeStamp } from "console";
+import {createProject} from "../../lib/puter.action";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -16,10 +19,33 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
       const navigate = useNavigate();
+      const [projects, setProjects] = useState<DesignItem[]>([]);
+      const isCreatingProjectRef = useRef(false);
 
       const handleUploadComplete = async (base64Data: string) => {
         const newId = Date.now().toString();
-        navigate(`/visualizer/${newId}`);
+        const name = `Residence ${newId}`;
+
+        const newItem = {
+          id: newId, name , sourceImage: base64Data, 
+          renderedImage: undefined, 
+          timestamp: Date.now(), 
+        }
+        const saved = await createProject({ item : newItem, visibility:'private'});
+          if(!saved){
+            console.error(`Failed to save project`)
+            return false;
+          } 
+
+          setProjects((prev) => [newItem, ...prev]);
+
+        navigate(`/visualizer/${newId}`,{
+            state: { 
+              initialImage: saved.sourceImage,
+              initialRendered: saved.renderedImage|| null,
+              name
+             }
+        });
 
         return true;
       }
@@ -71,9 +97,10 @@ export default function Home() {
             </div>
           </div>
           <div className="projects-grid">
-            <div className="project-card group">
+            {projects.map(({id, name, sourceImage, renderedImage, timestamp}) => (
+              <div className="project-card group">
               <div className="preview">
-                <img src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png" 
+                <img src={renderedImage || sourceImage}
                       alt="Project" />
                     <div className="badge">
                       <span>Community</span>
@@ -82,10 +109,10 @@ export default function Home() {
               
               <div className="card-body">
                 <div>
-                  <h3>Project Manhattan</h3>
+                  <h3>{name}</h3>
                   <div className="meta">
                     <Clock  size={13}/>
-                    <span>{new Date('01.01.2027').toLocaleDateString()}</span>
+                    <span>{new Date(timestamp).toLocaleDateString()}</span>
                     <span>By JSM</span>
                   </div>
                 </div>
@@ -95,6 +122,8 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            ))}
+            
 
           </div>
 
