@@ -1,6 +1,6 @@
 import puter from "@heyputer/puter.js";
 import { createHostingSlug, fetchBlobFromUrl, getHostedUrl, getImageExtension, HOSTING_CONFIG_KEY, imageUrlToPngBlob, isHostedUrl } from "./utils";
-import { renderToReadableStream } from "react-dom/server";
+
  
 
 export const getOrCreateHostingConfig = async (): Promise<HostingConfig | null>=>{
@@ -17,7 +17,7 @@ export const getOrCreateHostingConfig = async (): Promise<HostingConfig | null>=
             subdomain:created.subdomain
         }
         await puter.kv.set(HOSTING_CONFIG_KEY,record)
-        
+
         return record
     }catch(e){
     console.warn(`Could not find subdomain: ${e}`)
