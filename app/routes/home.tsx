@@ -152,7 +152,9 @@ export default function Home() {
                     </div>
 
                     <button
+                      type="button"
                       className="arrow"
+                      aria-label={`Open project ${name}`}
                       onClick={() =>
                         navigate(`/visualizer/${id}`, {
                           state: {
