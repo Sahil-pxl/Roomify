@@ -125,9 +125,7 @@ const VisualizerId = () => {
                               </div>
                             )}
                       </div>
-                  
                 )}
-
               </div>
           </div>
         </section>  

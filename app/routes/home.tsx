@@ -16,16 +16,15 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const navigate = useNavigate();
-
   const [projects, setProjects] = useState<DesignItem[]>([]);
   const isCreatingProjectRef = useRef(false);
 
   const handleUploadComplete = async (base64Data: string) => {
+    try {
     if (isCreatingProjectRef.current) return false;
-
     isCreatingProjectRef.current = true;
 
-    try {
+    
       const newId = Date.now().toString();
       const name = `Residence ${newId}`;
 
@@ -49,11 +48,11 @@ export default function Home() {
 
       setProjects((prev) => [saved, ...prev]);
 
-      navigate(`/visualizer/${saved.id}`, {
+      navigate(`/visualizer/${newId}`, {
         state: {
           initialImage: saved.sourceImage,
           initialRender: saved.renderedImage || null,
-          name: saved.name,
+          name
         },
       });
 
