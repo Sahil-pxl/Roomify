@@ -51,9 +51,13 @@ export default function Home() {
             });
 
             return true;
+        } catch (error) {
+            console.error("Failed to create project:", error);
+            return false;
         } finally {
             isCreatingProjectRef.current = false;
         }
+    }
     }
 
     useEffect(() => {
