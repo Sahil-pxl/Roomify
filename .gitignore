@@ -1,9 +1,17 @@
 .DS_Store
+<<<<<<< HEAD
 
+=======
+.DS_Store
+>>>>>>> 60c5a608cae2a760a357352a571ffe5c1bd73666
 .env
 .env.local
 .env.*
 !.env.example
+<<<<<<< HEAD
+=======
+/node_modules/
+>>>>>>> 60c5a608cae2a760a357352a571ffe5c1bd73666
 /node_modules/
 
 # React Router
