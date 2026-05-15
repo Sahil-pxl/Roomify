@@ -3,6 +3,8 @@ import {getOrCreateHostingConfig, uploadImageToHosting} from "./puter.hosting";
 import {isHostedUrl} from "./utils";
 import {PUTER_WORKER_URL} from "./constants";
 
+const getWorkerUrl = () => PUTER_WORKER_URL.replace(/\/$/, "");
+
 export const signIn = async () => await puter.auth.signIn();
 
 export const signOut = () => puter.auth.signOut();
@@ -20,6 +22,7 @@ export const createProject = async ({ item, visibility = "private" }: CreateProj
         console.warn('Missing VITE_PUTER_WORKER_URL; skip history fetch;');
         return null;
     }
+    const baseWorkerUrl = getWorkerUrl();
     const projectId = item.id;
 
     const hosting = await getOrCreateHostingConfig();
@@ -60,7 +63,7 @@ export const createProject = async ({ item, visibility = "private" }: CreateProj
     }
 
     try {
-        const response = await puter.workers.exec(`${PUTER_WORKER_URL}/api/projects/save`, {
+        const response = await puter.workers.exec(`${baseWorkerUrl}/projects/save`, {
             method: 'POST',
             body: JSON.stringify({
                 project: payload,
@@ -89,7 +92,8 @@ export const getProjects = async () => {
     }
 
     try {
-        const response = await puter.workers.exec(`${PUTER_WORKER_URL}/api/projects/list`, { method: 'GET' });
+        const workerUrl = getWorkerUrl();
+        const response = await puter.workers.exec(`${workerUrl}/projects/list`, { method: 'GET' });
 
         if(!response.ok) {
             console.error('Failed to fetch history', await response.text());
@@ -114,8 +118,9 @@ export const getProjectById = async ({ id }: { id: string }) => {
     console.log("Fetching project with ID:", id);
 
     try {
+        const workerUrl = getWorkerUrl();
         const response = await puter.workers.exec(
-            `${PUTER_WORKER_URL}/api/projects/get?id=${encodeURIComponent(id)}`,
+            `${workerUrl}/projects/get?id=${encodeURIComponent(id)}`,
             { method: "GET" },
         );
 

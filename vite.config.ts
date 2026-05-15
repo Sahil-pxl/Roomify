@@ -7,4 +7,13 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://polite-street-6194.puter.work',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

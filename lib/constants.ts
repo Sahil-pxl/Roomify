@@ -1,4 +1,6 @@
-export const PUTER_WORKER_URL = import.meta.env.VITE_PUTER_WORKER_URL || "";
+export const PUTER_WORKER_URL = import.meta.env.DEV
+  ? "/api"
+  : import.meta.env.VITE_PUTER_WORKER_URL || "/api";
 
 // Storage Paths
 export const STORAGE_PATHS = {
